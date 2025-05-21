@@ -1,150 +1,90 @@
-# ImplicitHittingSet
+# Implicit Hitting Set Solver
 
-# 🔍 Implicit Hitting Set Solver
+This project implements and compares different algorithms for solving the Implicit Hitting Set (IHS) problem. It includes three different approaches:
+1. Base algorithm
+2. Advanced algorithm with frequency-based optimization
+3. GF(2) algorithm using linear algebra
 
-This repository provides an efficient and modular implementation of an **Implicit Hitting Set (IHS) solver**, a powerful technique for solving a wide class of combinatorial optimization problems, especially in AI, verification, and computational biology.
+## Features
 
-![Build](https://img.shields.io/badge/build-passing-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Python](https://img.shields.io/badge/python-3.8+-blue)
+- Multiple IHS solving algorithms
+- Benchmarking suite for performance comparison
+- Interactive Streamlit visualization interface
+- Support for manual conflict input
+- Visual comparison of solution sizes and coverage
 
----
+## Installation
 
-## 📌 What is an Implicit Hitting Set?
-
-An **Implicit Hitting Set** framework solves problems where:
-
-* The full list of constraints (sets to hit) is **too large to enumerate upfront**.
-* A **separation oracle** provides violated constraints when given a candidate solution.
-
-Instead of pre-generating all sets, the algorithm **iteratively constructs** a hitting set by:
-
-1. Generating a candidate solution.
-2. Querying the oracle for violated sets.
-3. Adding those sets and re-solving.
-
-This approach is efficient for problems where constraints are exponentially many but can be identified lazily.
-
----
-
-## 🚀 Use Cases
-
-* **AI planning & synthesis**
-* **Formal verification (e.g., counterexample-guided abstraction refinement)**
-* **MaxSAT & minimal unsatisfiable subsets (MUS)**
-* **Network diagnostics / root cause analysis**
-* **Computational biology (e.g., gene interaction networks)**
-
----
-
-## 🛠️ Features
-
-* Modular implementation (plug your own oracle or solver)
-* Works with **Z3**, **PySAT**, or custom SAT/ILP solvers
-* Supports minimal hitting sets and cost-based variants
-* Easily extensible for custom applications
-* Lightweight and Pythonic API
-
----
-
-## 🧪 Example Usage
-
-```python
-from ihs_solver import ImplicitHittingSet
-from oracles import example_oracle
-
-solver = ImplicitHittingSet(
-    universe=[1, 2, 3, 4],
-    oracle=example_oracle,
-    solver_backend="z3"  # or "pysat", "ilp"
-)
-
-hitting_set = solver.solve()
-print("Minimal Hitting Set:", hitting_set)
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/ImplicitHittingSet.git
+cd ImplicitHittingSet
 ```
 
----
-
-## 📦 Installation
-
+2. Install the required dependencies:
 ```bash
-git clone https://github.com/yourusername/implicit-hitting-set.git
-cd implicit-hitting-set
 pip install -r requirements.txt
 ```
 
-> You can install additional solver support with:
+## Usage
+
+### Running the Benchmark
+
+To run the benchmarking suite and compare the performance of different algorithms:
 
 ```bash
-pip install z3-solver pysat
+python benchmark.py
 ```
 
----
+This will generate benchmark results for different problem sizes and save comparison plots.
 
-## 📂 Project Structure
+### Using the Interactive Interface
+
+To launch the Streamlit visualization interface:
+
+```bash
+streamlit run app.py
+```
+
+The interface allows you to:
+- Adjust problem parameters (number of elements, conflicts, and conflict size)
+- View and compare solutions from different algorithms
+- Add custom conflicts manually
+- Visualize solution sizes and coverage ratios
+
+### Using the Algorithms in Your Code
+
+```python
+from ihs import BaseIHS, AdvancedIHS, GF2IHS
+
+# Create a problem instance
+ihs = BaseIHS()  # or AdvancedIHS() or GF2IHS()
+
+# Add conflicts
+ihs.add_conflict({1, 2, 3})
+ihs.add_conflict({2, 3, 4})
+ihs.add_conflict({1, 4, 5})
+
+# Find the minimal hitting set
+solution = ihs.find_minimal_hitting_set()
+print(f"Solution: {solution}")
+```
+
+## Project Structure
 
 ```
-implicit-hitting-set/
-├── ihs_solver.py        # Core algorithm
-├── oracles/             # Example oracles
-├── solvers/             # Pluggable backend interfaces (Z3, PySAT)
-├── tests/               # Unit tests
-├── examples/            # Usage examples
+ImplicitHittingSet/
+├── ihs/
+│   ├── __init__.py
+│   ├── base.py
+│   ├── advanced.py
+│   └── gf2.py
+├── app.py
+├── benchmark.py
+├── requirements.txt
 └── README.md
 ```
 
----
+## License
 
-## 📈 Architecture Diagram
-
-```
-+----------------------------+
-|   User Application        |
-+------------+--------------+
-             |
-             v
-+------------+--------------+
-| ImplicitHittingSet API    |
-+------------+--------------+
-             |
-     +-------+--------+
-     |    Oracle       | <--- Lazy constraint generation
-     +-----------------+
-     |  Solver Backend | <--- Z3 / PySAT / ILP
-     +-----------------+
-```
-
----
-
-## 🧠 Citation & Reference
-
-If you use this code in your research, please cite:
-
-```
-@article{ihs2020,
-  title={Efficient Implicit Hitting Set Algorithms},
-  author={Your Name},
-  year={2020},
-  journal={arXiv preprint arXiv:xxxx.xxxxx}
-}
-```
-
----
-
-## 🤝 Contributing
-
-PRs welcome! Feel free to open issues or submit improvements.
-
-* Add new solvers
-* Improve example oracles
-* Expand test coverage
-
----
-
-## 📬 Contact
-
-For questions or collaborations, reach out to \[[youremail@example.com](mailto:youremail@example.com)].
-
----
-
-**Let’s make combinatorial optimization smarter and faster, one hitting set at a time.**
+This project is licensed under the MIT License - see the LICENSE file for details.
